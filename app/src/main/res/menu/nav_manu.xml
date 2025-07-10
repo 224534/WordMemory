@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/book"
+        android:icon="@drawable/nav_task"
+        android:title="我的单词本"/>
+
+    <item
+        android:id="@+id/like"
+        android:icon="@drawable/nav_mail"
+        android:title="我的收藏"/>
+
+</menu>

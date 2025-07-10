@@ -1,0 +1,16 @@
+package com.sunnyweather.wordmemory.logic.model
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
+import java.io.Serializable
+
+@Entity
+data class WordPrefer(var name: String, val words: MutableList<Word>) {
+
+    @PrimaryKey(autoGenerate = true)
+    var id : Long = 0
+
+}
+
+data class Word(var word: String = "", var translate: String = "", var like: Boolean = false)

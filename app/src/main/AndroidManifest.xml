@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,6 +13,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WordMemory"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.person.NewWordActivity"
+            android:theme="@style/Theme.AppCompat.Dialog"
+            android:exported="false" />
+        <activity
+            android:name=".ui.person.NewBookActivity"
+            android:theme="@style/Theme.AppCompat.Dialog"
+            android:exported="false" />
+        <activity
+            android:name=".ui.person.WordDialogActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".ui.person.BookDialogActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".ui.person.WordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.person.BookActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
