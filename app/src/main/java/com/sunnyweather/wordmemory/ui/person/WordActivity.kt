@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toolbar
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.enableEdgeToEdge
@@ -41,6 +42,8 @@ class WordActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.WordRecyclerView)
         val addWord = findViewById<FloatingActionButton>(R.id.addWord)
         val batchImport = findViewById<Button>(R.id.batchImport)
+        val searchEdit = findViewById<EditText>(R.id.searchEdit)
+        val searchBtn = findViewById<Button>(R.id.search)
 
         bookId = intent.getLongExtra("book_id", 0)
         if(viewModel.isInitialized == false) {
@@ -101,6 +104,15 @@ class WordActivity : AppCompatActivity() {
         batchImport.setOnClickListener {
             val intent = Intent(this, ImportActivity::class.java)
             batchImportResultLauncher.launch(intent)
+        }
+
+        searchBtn.setOnClickListener {
+            val search = searchEdit.text.toString()
+            val searchResult = if(search.isNotEmpty()) {
+                viewModel.getWords().filter  { it.word.contains(search, ignoreCase = true) }.toMutableList()
+            }
+            else viewModel.getWords()
+            adapter.submitList(searchResult)
         }
 
         viewModel.book.observe(this) { value ->

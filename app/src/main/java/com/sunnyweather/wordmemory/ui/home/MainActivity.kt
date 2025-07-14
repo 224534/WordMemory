@@ -1,27 +1,28 @@
 package com.sunnyweather.wordmemory.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ViewSwitcher
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.text.isDigitsOnly
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
 import com.sunnyweather.wordmemory.R
-import com.sunnyweather.wordmemory.logic.dao.AppDatabase
 import com.sunnyweather.wordmemory.makeToast
 import com.sunnyweather.wordmemory.ui.person.BookActivity
 
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     //使用二进制数码表示模式状态
     var bookId = -1L
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         val next = findViewById<Button>(R.id.next)
         val first = findViewById<Button>(R.id.first)
         val finish = findViewById<Button>(R.id.finish)
+        val placeLayout = findViewById<LinearLayout>(R.id.placeLayout)
         setSupportActionBar(toolBar)
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
@@ -73,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         next.visibility = View.INVISIBLE
         first.visibility = View.INVISIBLE
         finish.visibility = View.INVISIBLE
+        placeLayout.visibility = View.INVISIBLE
 
         //测试部分
         //val bookId = 1L
@@ -106,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                 last.visibility = View.VISIBLE
                 next.visibility = View.VISIBLE
                 first.visibility = View.VISIBLE
+                placeLayout.visibility = View.VISIBLE
                 wordEdit.isSaveEnabled = true //重建时恢复可保存状态
             }
             else {
@@ -124,10 +129,16 @@ class MainActivity : AppCompatActivity() {
         val first = findViewById<Button>(R.id.first)
         val finish = findViewById<Button>(R.id.finish)
         val viewSwitcher = findViewById<ViewSwitcher>(R.id.viewSwitcher)
+        val listSize = findViewById<TextView>(R.id.listSize)
+        val goTo = findViewById<Button>(R.id.goTo)
+        val placeEdit = findViewById<EditText>(R.id.placeEdit)
+        val placeText = findViewById<TextView>(R.id.placeText)
+        val placeSwitcher = findViewById<ViewSwitcher>(R.id.placeSwitcher)
 
         setModeText()
         getWordsFinal()
         setItemText(viewModel.positionNow)
+        listSize.text = "${viewModel.wordsFinal.size}"
 
         if(viewModel.MODE and MODE_MEMORY == 0) { //背诵模式
             viewSwitcher.displayedChild = 0 //背诵模式不可见输入
@@ -181,6 +192,27 @@ class MainActivity : AppCompatActivity() {
                 saveInputAndTips(R.color.inputWrong)
             }
         }
+
+        placeText.setOnClickListener {
+            placeSwitcher.displayedChild = 0
+            placeEdit.setText(placeText.text.toString())
+            placeEdit.requestFocus()
+            placeEdit.setSelection(placeEdit.text.length)
+        }
+
+        goTo.setOnClickListener {
+            val placeText = placeEdit.text.toString()
+            if(placeText.isDigitsOnly()) {
+                val place = placeText.toInt() - 1 //适应数组
+                if(place >= 0 && place < viewModel.wordsFinal.size) {
+                    viewModel.positionNow = place
+                    setItemText(viewModel.positionNow)
+                }
+                else {
+                    "请输入正确的位置".makeToast()
+                }
+            }
+        }
     }
 
     fun setModeText() {
@@ -209,9 +241,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     fun setItemText(position: Int) {
+        val placeText = findViewById<TextView>(R.id.placeText)
         val translate = findViewById<TextView>(R.id.translate)
+        val placeSwitcher = findViewById<ViewSwitcher>(R.id.placeSwitcher)
         translate.text = viewModel.wordsFinal[position].translate
+        placeSwitcher.displayedChild = 1
+        placeText.text = "${position + 1}"
         if(viewModel.MODE and MODE_MEMORY == 0) {
             setTextToMemory(position)
         }
@@ -300,4 +337,13 @@ class MainActivity : AppCompatActivity() {
         }
         else finish()
     }
+
+    /*override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_UP) {
+            val placeSwitcher = findViewById<ViewSwitcher>(R.id.placeSwitcher)
+            placeSwitcher.displayedChild = 1
+            return true
+        }
+        return super.onTouchEvent(event)
+    }*/
 }

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
@@ -37,6 +39,8 @@ class BookActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.BookRecyclerView)
         val toolBar = findViewById<Toolbar>(R.id.BookToolBar)
         val addBook = findViewById<FloatingActionButton>(R.id.addBook)
+        val searchEdit = findViewById<EditText>(R.id.searchEdit)
+        val searchBtn = findViewById<Button>(R.id.search)
 
         if(viewModel.isInitialized == false) {
             viewModel.likeOrNot = intent.getBooleanExtra("like_or_not", false)
@@ -78,6 +82,15 @@ class BookActivity : AppCompatActivity() {
             else {
                 "请前往单词本添加".makeToast()
             }
+        }
+
+        searchBtn.setOnClickListener {
+            val search = searchEdit.text.toString()
+            val searchResult = if(search.isNotEmpty()) {
+                viewModel.getBooks().filter { it.name.contains(search, ignoreCase = true) }
+            }
+            else viewModel.getBooks()
+            adapter.submitList(searchResult)
         }
 
         viewModel.books.observe(this, Observer { value ->

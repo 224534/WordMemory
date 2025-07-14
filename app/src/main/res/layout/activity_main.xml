@@ -43,7 +43,7 @@
             <ViewSwitcher
                 android:id="@+id/viewSwitcher"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
+                android:layout_height="160dp"
                 android:layout_alignParentTop="true">
 
                 <TextView
@@ -66,11 +66,11 @@
             <TextView
                 android:id="@+id/translate"
                 android:layout_width="wrap_content"
-                android:layout_height="100dp"
+                android:layout_height="80dp"
                 android:layout_below="@id/viewSwitcher"
                 android:layout_centerHorizontal="true"
-                android:textSize="30sp"
-                android:layout_marginTop="30dp"
+                android:textSize="25sp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
@@ -83,6 +83,58 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="20sp"/>
 
+            <LinearLayout
+                android:id="@+id/placeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="2dp"
+                android:layout_centerHorizontal="true"
+                android:layout_above="@+id/buttonLayout">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="当前位置："/>
+
+                <ViewSwitcher
+                    android:id="@+id/placeSwitcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/placeEdit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/placeText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </ViewSwitcher>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"/>
+
+                <TextView
+                    android:id="@+id/listSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <Button
+                    android:id="@+id/goTo"
+                    android:minWidth="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="0dp"
+                    android:layout_marginStart="5dp"
+                    android:textSize="14sp"
+                    android:text="跳转"/>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/finish"
@@ -92,6 +144,7 @@
                 android:text="完成"/>
 
             <LinearLayout
+                android:id="@+id/buttonLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

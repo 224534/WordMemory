@@ -8,7 +8,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="wdf"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WordMemory"
@@ -16,40 +16,22 @@
         <activity
             android:name=".ui.person.ImportActivity"
             android:exported="false" />
-
-        <receiver
-            android:name=".ui.person.WordReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="recreate_word" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".ui.person.BookReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="recreate_book" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".ui.person.NewWordActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Dialog" />
+            android:theme="@style/MyDialogTheme" />
         <activity
             android:name=".ui.person.NewBookActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Dialog" />
+            android:theme="@style/MyDialogTheme" />
         <activity
             android:name=".ui.person.WordDialogActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Dialog" />
+            android:theme="@style/MyDialogTheme" />
         <activity
             android:name=".ui.person.BookDialogActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Dialog" />
+            android:theme="@style/MyDialogTheme" />
         <activity
             android:name=".ui.person.WordActivity"
             android:exported="false" />

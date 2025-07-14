@@ -17,6 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginStart="5dp"
             android:orientation="vertical">
 
             <TextView
@@ -38,7 +39,7 @@
 
         </LinearLayout>
 
-        <Button
+        <ImageView
             android:id="@+id/likeBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
