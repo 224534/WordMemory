@@ -1,17 +1,19 @@
 package com.sunnyweather.wordmemory.ui.person
 
-import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.sunnyweather.wordmemory.R
 import com.sunnyweather.wordmemory.logic.model.WordPrefer
+import com.sunnyweather.wordmemory.ui.home.MainActivity
 
-class BookAdapter(private val activity: BookActivity, private var books: List<WordPrefer>) :
+class BookAdapter(activity: BookActivity, private var books: List<WordPrefer>) : //源list直接来自viewModel中，因此在设置完，检测到改变后，直接刷新即可
     RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
     private val context = activity
@@ -22,6 +24,7 @@ class BookAdapter(private val activity: BookActivity, private var books: List<Wo
         val bookName = view.findViewById<TextView>(R.id.bookName)
         val bookDeleteBtn = view.findViewById<Button>(R.id.bookDeleteBtn)
         val bookSetBtn = view.findViewById<Button>(R.id.bookSetBtn)
+        val open = view.findViewById<Button>(R.id.open)
     }
 
     override fun onCreateViewHolder(
@@ -29,28 +32,46 @@ class BookAdapter(private val activity: BookActivity, private var books: List<Wo
         viewType: Int
     ): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.book_item, parent, false)
-        val holder = ViewHolder(view)
-        val position = holder.adapterPosition
-        val book = books[position]
+        val holder =  ViewHolder(view)
         holder.apply {
             bookDeleteBtn.setOnClickListener {
-                viewModel.deleteBookItem(book)
-                books = viewModel.getBooks() //更改数据
-                notifyDataSetChanged()
+                AlertDialog.Builder(context).apply {
+                    setMessage("删除这个文件？")
+                    setCancelable(true)
+                    setPositiveButton("确定") { dialog, which ->
+                        val book = books[adapterPosition]
+                        viewModel.deleteBookItem(book)
+                    }
+                    setNegativeButton("取消") { dialog, which -> }
+                    show()
+                }
             }
             bookSetBtn.setOnClickListener {
+                val book = books[adapterPosition]
                 val intent = Intent(context, BookDialogActivity::class.java)
                 intent.putExtra("book_name", book.name)
                 intent.putExtra("book_id", book.id)
-                context.startActivityForResult(intent, 1)
-                books = viewModel.getBooks() //更改数据
-                notifyDataSetChanged()
+                intent.putExtra("position", adapterPosition)
+                context.setResultLauncher.launch(intent)
+                //更改数据在onResult部分
             }
             itemView.setOnClickListener {
+                val book = books[adapterPosition]
                 val intent = Intent(context, WordActivity::class.java)
                 intent.putExtra("book_id", book.id)
                 intent.putExtra("book_name", book.name)
+                intent.putExtra("like_or_not", viewModel.likeOrNot)
                 context.startActivity(intent)
+            }
+            open.setOnClickListener {
+                val book = books[adapterPosition]
+                Log.d("BookAdapter", "open is click")
+                val intent = Intent(context, MainActivity::class.java)
+                intent.putExtra("book_id", book.id)
+                intent.putExtra("like_or_not", viewModel.likeOrNot)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK //清楚所有其他页面
+                context.startActivity(intent)
+                context.finish()
             }
         }
         return holder
@@ -64,5 +85,10 @@ class BookAdapter(private val activity: BookActivity, private var books: List<Wo
     }
 
     override fun getItemCount() = books.size
+
+    fun submitList(newBooks: List<WordPrefer>) {
+        books = newBooks
+        notifyDataSetChanged()
+    }
 
 }

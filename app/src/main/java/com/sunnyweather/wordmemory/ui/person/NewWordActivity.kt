@@ -15,6 +15,7 @@ class NewWordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_word_dialog)
+        val like = intent.getBooleanExtra("like_or_not", false)
         val wordEdit = findViewById<EditText>(R.id.wordEdit)
         val translateEdit = findViewById<EditText>(R.id.translateEdit)
         val cancel = findViewById<Button>(R.id.cancel)
@@ -28,6 +29,7 @@ class NewWordActivity : AppCompatActivity() {
             val intent = Intent()
             intent.putExtra("word", word)
             intent.putExtra("translate", translate)
+            intent.putExtra("like_or_not", like)
             setResult(RESULT_OK, intent)
             finish()
         }

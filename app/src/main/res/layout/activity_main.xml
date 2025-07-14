@@ -2,6 +2,7 @@
 <androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,6 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/colorPrimary"/>
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolBar"
@@ -19,25 +25,117 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
         <TextView
-            android:id="@+id/bookName"
+            android:id="@+id/modeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_gravity="center"
             android:textSize="20sp"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="35dp"
             android:layout_marginBottom="60dp">
 
+            <ViewSwitcher
+                android:id="@+id/viewSwitcher"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_alignParentTop="true">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/word"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="35sp"/>
 
+                <EditText
+                    android:id="@+id/wordEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textSize="35sp"
+                    android:background="@color/editColor"/>
+
+            </ViewSwitcher>
+
+            <TextView
+                android:id="@+id/translate"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_below="@id/viewSwitcher"
+                android:layout_centerHorizontal="true"
+                android:textSize="30sp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:id="@+id/wordTips"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_below="@id/translate"
+                android:layout_centerHorizontal="true"
+                android:textSize="20sp"/>
+
+
+            <Button
+                android:id="@+id/finish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="完成"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_above="@id/finish">
+
+                <Button
+                    android:id="@+id/last"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:padding="5dp"
+                    android:text="上一个"/>
+
+                <Button
+                    android:id="@+id/first"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:padding="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="回到第一个"/>
+
+                <Button
+                    android:id="@+id/next"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:padding="5dp"
+                    android:text="下一个"/>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
 
     </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_manu"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

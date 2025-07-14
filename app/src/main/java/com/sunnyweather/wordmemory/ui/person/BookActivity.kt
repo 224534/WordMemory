@@ -1,17 +1,23 @@
 package com.sunnyweather.wordmemory.ui.person
 
-import android.app.ComponentCaller
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sunnyweather.wordmemory.R
+import com.sunnyweather.wordmemory.getResultLauncher
+import com.sunnyweather.wordmemory.makeToast
 
 class BookActivity : AppCompatActivity() {
 
@@ -19,6 +25,11 @@ class BookActivity : AppCompatActivity() {
         ViewModelProvider(this).get(BookViewModel::class.java)
     }
 
+    lateinit var adapter: BookAdapter
+
+    lateinit var setResultLauncher: ActivityResultLauncher<Intent>
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,21 +38,69 @@ class BookActivity : AppCompatActivity() {
         val toolBar = findViewById<Toolbar>(R.id.BookToolBar)
         val addBook = findViewById<FloatingActionButton>(R.id.addBook)
 
+        if(viewModel.isInitialized == false) {
+            viewModel.likeOrNot = intent.getBooleanExtra("like_or_not", false)
+            viewModel.isInitialized = true
+        }
+
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        val adapter = BookAdapter(this, viewModel.getBooks())
+        adapter = BookAdapter(this, viewModel.getBooks())
         recyclerView.adapter = adapter
 
         setSupportActionBar(toolBar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        addBook.setOnClickListener {
-            val intent = Intent(this, NewBookActivity::class.java)
-            startActivity(intent)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            if(viewModel.likeOrNot == false)
+                it.title = "我的单词本"
+            else it.title = "我的收藏"
         }
+
+        setResultLauncher = getResultLauncher { data ->
+            val bookName = data.getStringExtra("book_name")
+            val bookId = data.getLongExtra("book_id", 0)
+            val book = viewModel.getBookById(bookId)
+            if(bookName != null) {
+                book.name = bookName
+                viewModel.updateBookItem(book)
+            }
+        }
+        /*val addResultLauncher = getResultLauncher { data ->
+            recreate()
+        }*/
+        addBook.setOnClickListener {
+            if(viewModel.likeOrNot == false) {
+                val intent = Intent(this, NewBookActivity::class.java)
+                //addResultLauncher.launch(intent)
+                //startActivityForResult(intent, 2)
+                startActivity(intent)
+            }
+            else {
+                "请前往单词本添加".makeToast()
+            }
+        }
+
+        viewModel.books.observe(this, Observer { value ->
+            adapter.submitList(value)
+        })
+
     }
 
-    override fun onActivityResult(
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+        }
+        return true
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
+    /*override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
         data: Intent?,
@@ -56,17 +115,11 @@ class BookActivity : AppCompatActivity() {
                 if(bookName != null) {
                     book.name = bookName
                     viewModel.updateBookItem(book)
+                    recreate()
                 }
             }
+            2 -> if(resultCode == RESULT_OK && data != null) recreate()
         }
-    }
+    }*/
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
-        when(item.itemId) {
-            android.R.id.home -> {
-                finish()
-            }
-        }
-    }
 }

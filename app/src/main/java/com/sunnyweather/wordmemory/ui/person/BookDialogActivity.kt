@@ -17,6 +17,7 @@ class BookDialogActivity : AppCompatActivity() {
         setContentView(R.layout.activity_book_dialog)
         val bookName = intent.getStringExtra("book_name")
         val bookId = intent.getLongExtra("book_id", 0)
+        val position = intent.getIntExtra("position", -1)
         val bookEdit = findViewById<EditText>(R.id.bookEdit)
         val cancel = findViewById<Button>(R.id.cancel)
         val finish = findViewById<Button>(R.id.finish)
@@ -29,6 +30,7 @@ class BookDialogActivity : AppCompatActivity() {
             val intent = Intent()
             intent.putExtra("book_name", bookName)
             intent.putExtra("book_id", bookId)
+            intent.putExtra("position", position)
             setResult(RESULT_OK, intent)
             finish()
         }

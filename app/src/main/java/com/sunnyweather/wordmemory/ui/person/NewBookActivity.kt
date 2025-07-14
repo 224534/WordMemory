@@ -26,6 +26,8 @@ class NewBookActivity : AppCompatActivity() {
         finish.setOnClickListener {
             val bookName = bookEdit.text.toString()
             Repository.insertBookItem(bookName)
+            /*val intent = Intent()
+            setResult(RESULT_OK, intent)*/
             finish()
         }
     }

@@ -22,6 +22,7 @@ class WordDialogActivity : AppCompatActivity() {
         val word = intent.getStringExtra("word")
         val translate = intent.getStringExtra("translate")
         val like = intent.getBooleanExtra("like", false)
+        val id = intent.getLongExtra("id", -1L)
         wordEdit.setText(word)
         translateEdit.setText(translate)
         cancel.setOnClickListener {
@@ -34,6 +35,7 @@ class WordDialogActivity : AppCompatActivity() {
             intent.putExtra("word", word)
             intent.putExtra("like", like)
             intent.putExtra("translate", translate)
+            intent.putExtra("id", id)
             setResult(RESULT_OK, intent)
             finish()
         }

@@ -21,7 +21,7 @@ android:layout_height="wrap_content">
         android:id="@+id/wordEdit"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="#DCE4E4"/>
+        android:background="@color/editColor"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,7 +34,7 @@ android:layout_height="wrap_content">
         android:id="@+id/translateEdit"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="#DCE4E4"/>
+        android:background="@color/editColor"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
