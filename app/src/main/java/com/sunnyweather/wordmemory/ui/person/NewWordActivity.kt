@@ -24,8 +24,8 @@ class NewWordActivity : AppCompatActivity() {
             finish()
         }
         finish.setOnClickListener {
-            val word = wordEdit.text.toString()
-            val translate = translateEdit.text.toString()
+            val word = wordEdit.text.toString().trim()
+            val translate = translateEdit.text.toString().trim()
             val intent = Intent()
             intent.putExtra("word", word)
             intent.putExtra("translate", translate)

@@ -32,7 +32,7 @@ class WordAdapter(activity: WordActivity, word: List<Word>) :
         val wordText = view.findViewById<TextView>(R.id.wordText)
         val translateText = view.findViewById<TextView>(R.id.translateText)
         val wordDeleteBtn = view.findViewById<Button>(R.id.wordDeleteBtn)
-        val likeBtn = view.findViewById<ImageView>(R.id.likeBtn)
+        val likeBtn = view.findViewById<Button>(R.id.likeBtn)
         val wordSetBtn = view.findViewById<Button>(R.id.wordSetBtn)
     }
 
@@ -90,8 +90,9 @@ class WordAdapter(activity: WordActivity, word: List<Word>) :
             wordText.text = word.word
             translateText.text = word.translate
             if(word.like == true) {
-                likeBtn.setBackgroundColor(ContextCompat.getColor(context, R.color.like))
+                likeBtn.background = ContextCompat.getDrawable(context, R.drawable.liked)
             }
+            else likeBtn.background = ContextCompat.getDrawable(context, R.drawable.like)
         }
     }
 

@@ -43,7 +43,9 @@
         android:layout_margin="10dp"
         android:gravity="top"
         android:background="@color/editColor"
-        android:hint="请按照如下格式读入\n单词\n中文翻译\n单词\n中文翻译\n注：中间不要有多余的换行符"
+        android:hint="请按照如下格式读入\n单词\n中文翻译\n单词\n中文翻译
+        \n注：中间不要有多余的换行符\n如果想要中文在单词前面，可以在最开头加上114514
+        \n如：\n114514中文翻译\n单词\n中文翻译\n单词"
         android:textSize="20sp"/>
 
 </LinearLayout>

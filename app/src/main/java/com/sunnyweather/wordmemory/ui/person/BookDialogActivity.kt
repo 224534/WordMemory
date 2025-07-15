@@ -26,7 +26,7 @@ class BookDialogActivity : AppCompatActivity() {
             finish() //直接退出
         }
         finish.setOnClickListener {
-            val bookName = bookEdit.text.toString()
+            val bookName = bookEdit.text.toString().trim()
             val intent = Intent()
             intent.putExtra("book_name", bookName)
             intent.putExtra("book_id", bookId)

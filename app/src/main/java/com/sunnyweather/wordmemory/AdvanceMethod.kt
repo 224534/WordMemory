@@ -2,6 +2,8 @@ package com.sunnyweather.wordmemory
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
@@ -20,3 +22,7 @@ fun ComponentActivity.getResultLauncher(block: ActivityResult.(data: Intent) -> 
         }
     }
 } //封装监听器
+
+fun getBitmapFromUri(uri: Uri) = MyApplication.context.contentResolver.openFileDescriptor(uri, "r")?.use {
+    BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
+}

@@ -2,14 +2,15 @@ package com.sunnyweather.wordmemory.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ViewSwitcher
@@ -21,10 +22,15 @@ import androidx.core.text.isDigitsOnly
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.sunnyweather.wordmemory.R
+import com.sunnyweather.wordmemory.getBitmapFromUri
+import com.sunnyweather.wordmemory.getResultLauncher
+import com.sunnyweather.wordmemory.logic.ImageStoreManager
 import com.sunnyweather.wordmemory.makeToast
 import com.sunnyweather.wordmemory.ui.person.BookActivity
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,7 +44,9 @@ class MainActivity : AppCompatActivity() {
     //使用二进制数码表示模式状态
     var bookId = -1L
 
-    @SuppressLint("ClickableViewAccessibility")
+    private val imageName = "header_image"
+
+    @SuppressLint("ClickableViewAccessibility", "InternalInsetResource")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -52,10 +60,36 @@ class MainActivity : AppCompatActivity() {
         val first = findViewById<Button>(R.id.first)
         val finish = findViewById<Button>(R.id.finish)
         val placeLayout = findViewById<LinearLayout>(R.id.placeLayout)
+        val topMargin = findViewById<ImageView>(R.id.topMargin)
+        val headerView = navigationView.getHeaderView(0)
+        val headImage = headerView.findViewById<ImageView>(R.id.headImage)
+        val tip = headerView.findViewById<TextView>(R.id.tip)
+
         setSupportActionBar(toolBar)
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.setHomeAsUpIndicator(R.drawable.ic_home)
+        }
+
+        thread { //开启线程加载，节约进入程序的时间
+            val headerImageRes = ImageStoreManager.loadImage(this, imageName)
+            runOnUiThread {
+                if(headerImageRes != null) {
+                    Glide.with(this).load(headerImageRes).into(headImage)
+                    tip.visibility = View.INVISIBLE //加载到图片就隐藏
+                }
+                else tip.visibility = View.VISIBLE //否则加载出来
+            }
+        }
+        val headImageResultLauncher = getResultLauncher { data ->
+            data.data?.let { uri ->
+                Glide.with(this@MainActivity).load(uri).into(headImage)
+                thread { //加载完成后，使用线程储存，节约展示图片的时间
+                    val bitmap = getBitmapFromUri(uri)!!
+                    ImageStoreManager.saveImage(this@MainActivity, bitmap, imageName)
+                    tip.visibility = View.INVISIBLE
+                }
+            }
         }
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when(menuItem.itemId) {
@@ -72,14 +106,24 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+        headImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            intent.type = "image/*"
+            headImageResultLauncher.launch(intent)
+        }
+
         last.visibility = View.INVISIBLE
         next.visibility = View.INVISIBLE
         first.visibility = View.INVISIBLE
         finish.visibility = View.INVISIBLE
         placeLayout.visibility = View.INVISIBLE
-
-        //测试部分
-        //val bookId = 1L
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        val statusBarHeight = resources.getDimensionPixelSize(resourceId)
+        resources.getDimension(R.dimen.status_bar_height)
+        val layoutParams = topMargin.layoutParams
+        layoutParams.height = statusBarHeight - 20
+        topMargin.layoutParams = layoutParams
 
         val likeOrNot = intent.getBooleanExtra("like_or_not", false)
         if(likeOrNot) viewModel.MODE = viewModel.MODE xor MODE_LIKE
@@ -94,6 +138,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.book = viewModel.getBookById(bookId) //book不会变，不需要重建
                 viewModel.isInitialized = true
             }
+
+            //下面的是切换模式时会改变的内容
 
             if(viewModel.title == null) { //title会变，需要重建
                 val builder = StringBuilder()
@@ -202,8 +248,9 @@ class MainActivity : AppCompatActivity() {
 
         goTo.setOnClickListener {
             val placeText = placeEdit.text.toString()
-            if(placeText.isDigitsOnly()) {
-                val place = placeText.toInt() - 1 //适应数组
+            var place = placeText.toIntOrNull()
+            if(place != null) {
+                place = place - 1 //适应数组
                 if(place >= 0 && place < viewModel.wordsFinal.size) {
                     viewModel.positionNow = place
                     setItemText(viewModel.positionNow)
@@ -211,6 +258,9 @@ class MainActivity : AppCompatActivity() {
                 else {
                     "请输入正确的位置".makeToast()
                 }
+            }
+            else {
+                "请输入正确的位置".makeToast()
             }
         }
     }
@@ -329,13 +379,13 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
-        super.onBackPressed()
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
         if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers()
         }
-        else finish()
+        else super.onBackPressed()
     }
 
     /*override fun onTouchEvent(event: MotionEvent?): Boolean {

@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
@@ -38,9 +40,11 @@ class BookActivity : AppCompatActivity() {
         setContentView(R.layout.activity_book)
         val recyclerView = findViewById<RecyclerView>(R.id.BookRecyclerView)
         val toolBar = findViewById<Toolbar>(R.id.BookToolBar)
-        val addBook = findViewById<FloatingActionButton>(R.id.addBook)
+        val addBook = findViewById<Button>(R.id.addBook)
         val searchEdit = findViewById<EditText>(R.id.searchEdit)
         val searchBtn = findViewById<Button>(R.id.search)
+        val topMargin = findViewById<ImageView>(R.id.topMargin)
+        val bottomMargin =  findViewById<ImageView>(R.id.bottomMargin)
 
         if(viewModel.isInitialized == false) {
             viewModel.likeOrNot = intent.getBooleanExtra("like_or_not", false)
@@ -59,6 +63,16 @@ class BookActivity : AppCompatActivity() {
                 it.title = "我的单词本"
             else it.title = "我的收藏"
         }
+        val resourceId1 = resources.getIdentifier("status_bar_height", "dimen", "android")
+        val resourceId2 = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        val statusBarHeight = resources.getDimensionPixelSize(resourceId1)
+        val navigationBarHeight = resources.getDimensionPixelSize(resourceId2)
+        val layoutParams = topMargin.layoutParams
+        layoutParams.height = statusBarHeight - 20
+        topMargin.layoutParams = layoutParams
+        val params = bottomMargin.layoutParams
+        params.height = navigationBarHeight
+        bottomMargin.layoutParams = params
 
         setResultLauncher = getResultLauncher { data ->
             val bookName = data.getStringExtra("book_name")
@@ -69,15 +83,16 @@ class BookActivity : AppCompatActivity() {
                 viewModel.updateBookItem(book)
             }
         }
-        /*val addResultLauncher = getResultLauncher { data ->
-            recreate()
-        }*/
+        val addResultLauncher = getResultLauncher { data ->
+            //recreate()
+            viewModel.refresh()
+        }
         addBook.setOnClickListener {
             if(viewModel.likeOrNot == false) {
                 val intent = Intent(this, NewBookActivity::class.java)
-                //addResultLauncher.launch(intent)
+                addResultLauncher.launch(intent)
                 //startActivityForResult(intent, 2)
-                startActivity(intent)
+                //startActivity(intent)
             }
             else {
                 "请前往单词本添加".makeToast()
@@ -85,7 +100,7 @@ class BookActivity : AppCompatActivity() {
         }
 
         searchBtn.setOnClickListener {
-            val search = searchEdit.text.toString()
+            val search = searchEdit.text.toString().trim()
             val searchResult = if(search.isNotEmpty()) {
                 viewModel.getBooks().filter { it.name.contains(search, ignoreCase = true) }
             }
@@ -106,11 +121,6 @@ class BookActivity : AppCompatActivity() {
             }
         }
         return true
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
     }
 
     /*override fun onActivityResult(

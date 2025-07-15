@@ -39,21 +39,21 @@
 
         </LinearLayout>
 
-        <ImageView
+        <Button
             android:id="@+id/likeBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
-            android:background="@drawable/nav_mail"/>
+            android:background="@drawable/like"/>
 
         <Button
             android:id="@+id/wordDeleteBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/ic_delete"/>
+            android:layout_marginStart="12dp"
+            android:background="@drawable/shanchu"/>
 
         <Button
             android:id="@+id/wordSetBtn"
@@ -62,7 +62,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="5dp"
-            android:background="@drawable/ic_settings"/>
+            android:background="@drawable/gengduo"/>
 
     </LinearLayout>
 

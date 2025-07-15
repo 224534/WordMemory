@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toolbar
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.enableEdgeToEdge
@@ -40,13 +41,15 @@ class WordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_word)
         val toolBar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.WordToolBar)
         val recyclerView = findViewById<RecyclerView>(R.id.WordRecyclerView)
-        val addWord = findViewById<FloatingActionButton>(R.id.addWord)
+        val addWord = findViewById<Button>(R.id.addWord)
         val batchImport = findViewById<Button>(R.id.batchImport)
         val searchEdit = findViewById<EditText>(R.id.searchEdit)
         val searchBtn = findViewById<Button>(R.id.search)
+        val topMargin = findViewById<ImageView>(R.id.topMargin)
+        val bottomMargin =  findViewById<ImageView>(R.id.bottomMargin)
 
         bookId = intent.getLongExtra("book_id", 0)
-        if(viewModel.isInitialized == false) {
+        if(viewModel.isInitialized == false) { //表示mainActivity是新建的，需要加载一些内容
             viewModel.likeOrNot = intent.getBooleanExtra("like_or_not", false)
             viewModel.book.value!!.name = intent.getStringExtra("book_name") ?: ""
             viewModel.isInitialized = true
@@ -57,6 +60,16 @@ class WordActivity : AppCompatActivity() {
             it.title = viewModel.book.value!!.name
             it.setDisplayHomeAsUpEnabled(true)
         }
+        val resourceId1 = resources.getIdentifier("status_bar_height", "dimen", "android")
+        val resourceId2 = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        val statusBarHeight = resources.getDimensionPixelSize(resourceId1)
+        val navigationBarHeight = resources.getDimensionPixelSize(resourceId2)
+        val layoutParams = topMargin.layoutParams
+        layoutParams.height = statusBarHeight - 20
+        topMargin.layoutParams = layoutParams
+        val params = bottomMargin.layoutParams
+        params.height = navigationBarHeight
+        bottomMargin.layoutParams = params
 
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
@@ -87,10 +100,20 @@ class WordActivity : AppCompatActivity() {
         val batchImportResultLauncher = getResultLauncher { data ->
             val input = data.getStringExtra("import_text")
             if(input != null) {
-                val inputList = input.lines() //前面已经保证行数一定为偶数
-                for(i in 0 until inputList.size step 2) {
-                    viewModel.insertWord(Word(inputList[i], inputList[i+1], viewModel.likeOrNot))
-                    //奇数行为单词，偶数行为中文翻译，是否收藏与当前所处文件夹有关
+                if(input.length >= 6 && input.substring(0..5) == "114514") { //先读中文
+                    val inputFinal = input.substring(6) //剪掉前面6个
+                    val inputList = inputFinal.lines()
+                    for (i in 0 until inputList.size step 2) {
+                        viewModel.insertWord(Word(inputList[i+1].trim(), inputList[i].trim(), viewModel.likeOrNot))
+                    }
+                }
+                else { //先读单词
+                    val inputList = input.lines() //前面已经保证行数一定为偶数
+                    for(i in 0 until inputList.size step 2) {
+                        viewModel.insertWord(Word(inputList[i].trim(), inputList[i+1].trim(), viewModel.likeOrNot))
+                        //奇数行为单词，偶数行为中文翻译，是否收藏与当前所处文件夹有关
+                        //记得去掉空白符
+                    }
                 }
             }
         }
@@ -127,11 +150,6 @@ class WordActivity : AppCompatActivity() {
             }
         }
         return true
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
     }
 
     /*override fun onActivityResult(

@@ -39,6 +39,10 @@ class BookViewModel : ViewModel() {
 
     fun getBookById(id : Long) = Repository.getBookById(id)
 
+    fun refresh() {
+        _books.value = Repository.getBooks()
+    }
+
     /*fun getBooks() : List<WordPrefer>{
         val books = Repository.getBooks()
         Log.d("BookViewModel", "$books")

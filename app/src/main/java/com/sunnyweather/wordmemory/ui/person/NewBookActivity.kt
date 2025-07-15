@@ -24,10 +24,10 @@ class NewBookActivity : AppCompatActivity() {
             finish() //直接退出
         }
         finish.setOnClickListener {
-            val bookName = bookEdit.text.toString()
+            val bookName = bookEdit.text.toString().trim()
             Repository.insertBookItem(bookName)
-            /*val intent = Intent()
-            setResult(RESULT_OK, intent)*/
+            val intent = Intent()
+            setResult(RESULT_OK, intent)
             finish()
         }
     }

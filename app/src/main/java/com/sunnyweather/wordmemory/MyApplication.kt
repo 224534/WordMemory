@@ -13,6 +13,7 @@ class MyApplication : Application() {
     companion object {
         lateinit var context: Context
         var primaryKey: Long = 0
+        var isInitialized = false
     }
 
     override fun onCreate() {
