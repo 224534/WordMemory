@@ -142,7 +142,9 @@ class WordActivity : AppCompatActivity() {
         searchBtn.setOnClickListener {
             val search = searchEdit.text.toString()
             val searchResult = if(search.isNotEmpty()) {
-                viewModel.getWords().filter  { it.word.contains(search, ignoreCase = true) }.toMutableList()
+                viewModel.getWords().filter  {
+                    it.word.contains(search, ignoreCase = true) || it.translate.contains(search, ignoreCase = true)
+                }.toMutableList()
             }
             else viewModel.getWords()
             adapter.submitList(searchResult)
