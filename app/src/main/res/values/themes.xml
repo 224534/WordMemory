@@ -1,8 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.WordMemory" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Base.Theme.WordMemory" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="actionMenuTextColor">@color/reBackground</item>
     </style>
 
     <style name="Theme.WordMemory" parent="Base.Theme.WordMemory" />

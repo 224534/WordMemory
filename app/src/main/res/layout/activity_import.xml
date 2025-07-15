@@ -24,12 +24,27 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
         <Button
+            android:id="@+id/export"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/finish"
+            android:layout_centerVertical="true"
+            android:minWidth="40dp"
+            android:paddingHorizontal="10dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/colorButtonText"
+            android:text="导出源文件"/>
+
+        <Button
             android:id="@+id/finish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="40dp"
+            android:paddingHorizontal="10dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
+            android:textColor="@color/colorButtonText"
             android:text="完成"/>
 
 

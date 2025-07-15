@@ -39,19 +39,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="40dp"
+                    android:paddingHorizontal="10dp"
                     android:layout_toLeftOf="@id/batchImport"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
+                    android:textColor="@color/colorButtonText"
                     android:text="添加"/>
 
                 <Button
                     android:id="@+id/batchImport"
                     android:minWidth="40dp"
+                    android:paddingHorizontal="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="10dp"
+                    android:textColor="@color/colorButtonText"
                     android:text="批量导入"/>
 
             </RelativeLayout>
@@ -75,6 +79,7 @@
                     android:minWidth="40dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorButtonText"
                     android:text="查询"/>
 
             </LinearLayout>

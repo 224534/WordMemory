@@ -126,6 +126,16 @@ class WordActivity : AppCompatActivity() {
 
         batchImport.setOnClickListener {
             val intent = Intent(this, ImportActivity::class.java)
+            val textNow = if(viewModel.likeOrNot == false) viewModel.getWords()
+                        else viewModel.getWords().filter { it.like == true }
+            val builder = StringBuilder()
+            for (word in textNow) {
+                builder.append(word.word)
+                builder.append("\n")
+                builder.append(word.translate)
+                builder.append("\n")
+            }
+            intent.putExtra("text_now", builder.toString())
             batchImportResultLauncher.launch(intent)
         }
 

@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
@@ -23,6 +24,7 @@ class ImportActivity : AppCompatActivity() {
         val importEdit = findViewById<EditText>(R.id.importEdit)
         val toolbar = findViewById<Toolbar>(R.id.toolBar)
         val finish = findViewById<Button>(R.id.finish)
+        val export = findViewById<Button>(R.id.export)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {
@@ -44,11 +46,48 @@ class ImportActivity : AppCompatActivity() {
             }
         }
 
+        export.setOnClickListener {
+            if(importEdit.text.isNotEmpty()) {
+                AlertDialog.Builder(this).apply {
+                    setTitle("确定要导入吗")
+                    setMessage("这将会覆盖所有已输入的内容")
+                    setCancelable(true)
+                    setNegativeButton ("取消") { _, _ -> }
+                    setPositiveButton ("确定") { _, _ ->
+                        val textNow = intent.getStringExtra("text_now") ?: ""
+                        importEdit.setText(textNow)
+                        importEdit.setSelection(textNow.length)
+                    }
+                    show()
+                }
+            }
+            else {
+                val textNow = intent.getStringExtra("text_now") ?: ""
+                importEdit.setText(textNow)
+                importEdit.setSelection(textNow.length)
+            }
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val importEdit = findViewById<EditText>(R.id.importEdit)
         when(item.itemId) {
-            android.R.id.home -> finish()
+            android.R.id.home -> {
+                if(importEdit.text.isNotEmpty()) { //有输入才确定
+                    AlertDialog.Builder(this).apply {
+                        setTitle("确定要退出吗")
+                        setMessage("这将会删除所有已输入的内容")
+                        setCancelable(true)
+                        setPositiveButton("确定") { _, _ ->
+                            finish()
+                        }
+                        setNegativeButton("取消") { _, _ ->}
+                        show()
+                    }
+                }
+                else finish()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

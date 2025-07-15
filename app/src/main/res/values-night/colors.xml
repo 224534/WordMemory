@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#FF000000</color>
+    <color name="background">#000000</color>
+    <color name="reBackground">#FFFFFF</color>
+    <color name="editColor">#303030</color>
+    <color name="colorButtonText">#B3FFFFFF</color>
 </resources>
