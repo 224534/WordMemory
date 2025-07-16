@@ -32,6 +32,12 @@ class WordViewModel(val bookId: Long) : ViewModel() { //word页面从单词本�
         _book.value = bookValue
     }
 
+    fun deleteAllWords() {
+        bookValue.words.clear()
+        Repository.updateBookItem(bookValue)
+        _book.value = bookValue
+    }
+
     fun updateWord(word: Word, id : Long) {
         bookValue.words.forEach {
             if(it.id == id) {

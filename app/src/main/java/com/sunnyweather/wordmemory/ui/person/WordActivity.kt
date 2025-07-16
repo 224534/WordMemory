@@ -99,6 +99,10 @@ class WordActivity : AppCompatActivity() {
         }
         val batchImportResultLauncher = getResultLauncher { data ->
             val input = data.getStringExtra("import_text")
+            val deleteAll = data.getBooleanExtra("delete_all", false)
+            if(deleteAll == true) {
+                viewModel.deleteAllWords() //删除原来全部数据
+            }
             if(input != null) {
                 if(input.length >= 6 && input.substring(0..5) == "114514") { //先读中文
                     val inputFinal = input.substring(6) //剪掉前面6个

@@ -15,6 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
 
+        <ImageView
+            android:id="@+id/topMargin"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary"/>
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolBar"
             android:layout_width="match_parent"
@@ -33,7 +39,7 @@
             android:paddingHorizontal="10dp"
             android:layout_marginEnd="10dp"
             android:textColor="@color/colorButtonText"
-            android:text="导出源文件"/>
+            android:text="批量修改"/>
 
         <Button
             android:id="@+id/finish"
@@ -62,5 +68,10 @@
         \n注：中间不要有多余的换行符\n如果想要中文在单词前面，可以在最开头加上114514
         \n如：\n114514中文翻译\n单词\n中文翻译\n单词"
         android:textSize="20sp"/>
+
+    <ImageView
+        android:id="@+id/bottomMargin"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
 </LinearLayout>
